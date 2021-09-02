@@ -13,27 +13,33 @@ import com.amazonaws.services.elasticmapreduce.model.*;
 import java.io.File;
 
 public class EmrApp {
+    private static final String JAR_FILE =  "ds-ass2.jar";
+    private static final String JAR_BUCKET =  "dsass2bgujar";
+    private static final String STOPWORDS_FILE =  "stop_words.txt";
+    private static final String STOPWORDS_BUCKET =  "stopwordsbgu";
+    private static final String LOCAL_INPUT =  "input";
+    private static final String S3_INPUT =  "s3://datasets.elasticmapreduce/ngrams/books/20090715/heb-all/2gram/data";
+    
+    
+   
     public static void main(String[] args) throws Exception {
-        File jar_file = new File("ds-ass2.jar");
+        File jar_file = new File(JAR_FILE);
 
         aws aws_ = new aws();
         aws_.create_s3();
         /*
         the jar file, stop words file and input file should be in the bucket
+        if not uncomment the next lines
          */
-
-        //   aws_.createBucket("dsass2bgujar");
-       // aws_.send_file("dsass2bgujar", "ass2jar", jar_file);
-        File stop_file = new File("stop_words.txt");
-        aws_.create_s3();
-        aws_.create_sqs();
-        //  aws_.create_queue("badCollocations");
-        // aws_.create_queue("goodCollocations");
-
+       // aws_.create_s3();
+       // aws_.createBucket(JAR_BUCKET);
+       // aws_.send_file(JAR_BUCKET, "ass2jar", jar_file);
+       // File stop_file = new File(STOPWORDS_FILE);
+       
         //   aws_.createBucket("stopwordsbgu");
-        //  aws_.send_file("stopwordsbgu","stop",stop_file);
-        //   File input = new File("input");
-        //  aws_.send_file("dsass2bgujar","input",input);
+        //  aws_.send_file(STOPWORDS_BUCKET,"stop",stop_file);
+        //   File input = new File(LOCAL_INPUT);
+        //  aws_.send_file("dsass2bgujar",LOCAL_INPUT,input);
         AWSCredentials credentials = new ProfileCredentialsProvider("./credentials", "default").getCredentials();
 
         AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
@@ -44,7 +50,7 @@ public class EmrApp {
         HadoopJarStepConfig hadoopJarStep1 = new HadoopJarStepConfig()
                 .withJar("s3n://dsass2bgujar/ass2jar") // This should be a full map  reduce application.
                 .withMainClass("Step_one")
-                .withArgs("s3://datasets.elasticmapreduce/ngrams/books/20090715/heb-all/2gram/data", "s3n://dsass2bgu/output1");
+                .withArgs(S3_INPUT, "s3n://dsass2bgu/output1");
         StepConfig stepConfig1 = new StepConfig()
                 .withName("step1")
                 .withHadoopJarStep(hadoopJarStep1)
