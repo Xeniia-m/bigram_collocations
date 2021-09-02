@@ -41,7 +41,6 @@ public class Step_one {
 
             File file = new File("stop_words_");
             FileInputStream fstream = new FileInputStream(file);
-         //   FileReader fr = new FileReader(file);  //Creation of File Reader object
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream,"UTF-8")); //Creation of BufferedReader object
             String s;
             while((s=br.readLine())!=null)  {
@@ -62,7 +61,6 @@ public class Step_one {
                 * word2     num
             */
             String[] bigram = value.toString().split("\t");
-         //   System.out.println(bigram[0]);
             if (bigram.length >= 5) {
                 IntWritable decade = new IntWritable(get_decade(Integer.parseInt(bigram[1])));
                 String[] big_words = bigram[0].split("\\s+");
@@ -157,14 +155,11 @@ public class Step_one {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        //
-
+        
         FileInputFormat.addInputPath(job, new Path(input_path));
         FileOutputFormat.setOutputPath(job, new Path(output_path));
-        System.out.println("step one starting..");
         job.waitForCompletion(true) ;
-        System.out.println("step one end");
-
+        
 
     }
 
