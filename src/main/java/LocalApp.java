@@ -60,9 +60,6 @@ public class LocalApp {
     }
 
 
-    private static void delete_message(Message message, String queue_name) {
-       }
-
 
     public static void main(String[] args) throws Exception {
 
@@ -85,8 +82,8 @@ public class LocalApp {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-      // job.setInputFormatClass(SequenceFileInputFormat.class);
-       FileInputFormat.addInputPath(job, new Path("input"));
+      // job.setInputFormatClass(SequenceFileInputFormat.class);   *uncomment for a sequence input file*
+        FileInputFormat.addInputPath(job, new Path("input"));
         FileOutputFormat.setOutputPath(job, new Path("step1_output"));
         int state = job.waitForCompletion(true) ? 0 : 1;
         if(state!=0){
@@ -100,16 +97,11 @@ public class LocalApp {
         job2.setJarByClass(Step_two.class);
         job2.setMapperClass(Step_two.MapperClass.class);
         job2.setPartitionerClass(Step_two.PartitionerClass.class);
-        // job.setCombinerClass(Step1.ReducerClass.class);
         job2.setReducerClass(Step_two.ReducerClass.class);
         job2.setMapOutputKeyClass(Text.class);
         job2.setMapOutputValueClass(Text.class);
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(Text.class);
-
-        //    job.setInputFormatClass(SequenceFileInputFormat.class);
-        System.out.println("before wait0\n");
-
 
         FileInputFormat.addInputPath(job2, new Path("step1_output"));
 
@@ -120,22 +112,16 @@ public class LocalApp {
             System.exit(1);
         }
 
-
         Configuration conf3 = new Configuration();
         Job job3 = new Job(conf3, "word count");
         job3.setJarByClass(Step_three.class);
         job3.setMapperClass(Step_three.MapperClass.class);
         job3.setPartitionerClass(Step_three.PartitionerClass.class);
-        // job.setCombinerClass(Step1.ReducerClass.class);
         job3.setReducerClass(Step_three.ReducerClass.class);
         job3.setMapOutputKeyClass(Text.class);
         job3.setMapOutputValueClass(Text.class);
         job3.setOutputKeyClass(Text.class);
         job3.setOutputValueClass(Text.class);
-
-        //    job.setInputFormatClass(SequenceFileInputFormat.class);
-        System.out.println("before wait1\n");
-
 
         FileInputFormat.addInputPath(job3, new Path("step2_output"));
 
