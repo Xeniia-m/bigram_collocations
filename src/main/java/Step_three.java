@@ -22,7 +22,7 @@ public class Step_three {
 
         }
         /*
-        for all bigrams: decade word1 word2 N num_bigrams num_word1
+        for all input: decade word1 word2 N num_bigrams num_word1
         write to the contex:
         key: decade * word2 1    value: word1 word2 N num_bigrams num_word1
 
@@ -34,7 +34,7 @@ public class Step_three {
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String [] vals = value.toString().split("\t");
 
-            if(vals.length>3){//(!vals[0].equals("*")){
+            if(vals.length>3){
                 context.write(new Text("* "+vals[2]+" 1"),
                         new Text(vals[0]+ " " +vals[1]+ " " + vals[2]+ " " + vals[3] + " "+ vals[4]+" "+vals[5]));
             }
@@ -92,10 +92,10 @@ public class Step_three {
         String output_path = args[1];
         Configuration conf3 = new Configuration();
         Job job3 = new Job(conf3, "step3");
-         job3.setJarByClass(Step_three.class);
+        job3.setJarByClass(Step_three.class);
         job3.setMapperClass(Step_three.MapperClass.class);
         job3.setPartitionerClass(Step_three.PartitionerClass.class);
-       job3.setReducerClass(Step_three.ReducerClass.class);
+        job3.setReducerClass(Step_three.ReducerClass.class);
         job3.setMapOutputKeyClass(Text.class);
         job3.setMapOutputValueClass(Text.class);
         job3.setOutputKeyClass(Text.class);
